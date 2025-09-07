@@ -12,7 +12,7 @@ public class Tile {
         this.value = value;
         this.row = row;
         this.col = col;
-        this.next = null;
+        this.next = null;/**/
     }
 
     /** Return my current row. */
