@@ -150,7 +150,7 @@ public class Model extends Observable {
                 Tile tile1 = this.board.tile(i, j);
                 if (tile1 != null) {
                     boolean tile2_exists = false;
-                    for (int k = j + 1; k < this.board.size(); k++) {
+                    for (int k = j + 1; k < this.board.size() && !tile2_exists; k++) {
                         Tile tile2 = this.board.tile(i, k);
                         if (tile2 != null) {
                             tile2_exists = true;
