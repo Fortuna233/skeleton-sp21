@@ -139,13 +139,44 @@ public class Model extends Observable {
      *
      */
     public boolean tilt(Side side) {
-        boolean changed;
-        changed = false;
-
+        boolean changed = false;
         // TODO: Modify this.board (and perhaps this.score) to account
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
-
+        this.board.setViewingPerspective(side);
+        boolean[][] isMerged = new boolean[this.board.size()][this.board.size()];
+        for (int i = 0; i < this.board.size(); i++) {
+            for (int j = this.board.size() - 2; j >= 0 ; j--) {
+                Tile tile1 = this.board.tile(i, j);
+                if (tile1 != null) {
+                    boolean tile2_exists = false;
+                    for (int k = j + 1; k < this.board.size(); k++) {
+                        Tile tile2 = this.board.tile(i, k);
+                        if (tile2 != null) {
+                            tile2_exists = true;
+                            if (tile2.value() == tile1.value() && !isMerged[i][k]) {
+                                this.board.move(i, k, tile1);
+                                isMerged[i][k] = true;
+                                changed = true;
+                                score += 2 * tile1.value();
+                                break;
+                            } else {
+                                if (k - 1 != j) {
+                                    this.board.move(i, k - 1, tile1);
+                                    changed = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if (!tile2_exists) {
+                        this.board.move(i, this.board.size() - 1, tile1);
+                        changed = true;
+                    }
+                }
+            }
+        }
+        board.setViewingPerspective(Side.NORTH);
         checkGameOver();
         if (changed) {
             setChanged();
@@ -197,7 +228,6 @@ public class Model extends Observable {
                 if (b.tile(i, j) != null && b.tile(i, j).value() == MAX_PIECE) {
                     return true;
                 }
-
             }
         }
         return false;
@@ -216,16 +246,16 @@ public class Model extends Observable {
         } else {
             for (int i = 0; i < b.size(); i++) {
                 for (int j = 0; j < b.size(); j++) {
-                    if (i - 1 > 0 && b.tile(i - 1, j).value() == b.tile(i, j).value()) {
+                    if (i - 1 >= 0 && b.tile(i - 1, j).value() == b.tile(i, j).value()) {
                         return true;
                     }
-                    if (i + 1 <= b.size() && b.tile(i + 1, j).value() == b.tile(i, j).value()) {
+                    if (i + 1 < b.size() && b.tile(i + 1, j).value() == b.tile(i, j).value()) {
                         return true;
                     }
-                    if (j - 1 > 0 && b.tile(i, j - 1).value() == b.tile(i, j).value()) {
+                    if (j - 1 >= 0 && b.tile(i, j - 1).value() == b.tile(i, j).value()) {
                         return true;
                     }
-                    if (j + 1 >= b.size() && b.tile(i, j + 1).value() == b.tile(i, j).value()) {
+                    if (j + 1 < b.size() && b.tile(i, j + 1).value() == b.tile(i, j).value()) {
                         return true;
                     }
                 }
