@@ -1,0 +1,8 @@
+{
+    "java.debug.settings.console": "internalConsole",
+    "java.project.sourcePaths": [
+        "proj0/javalib",
+        "library-sp21",
+        "proj0/game2048"
+    ]
+}
